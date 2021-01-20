@@ -25,6 +25,9 @@
         <div class="chat">
           <div class="chat-window">
             <div class="output">
+              <p v-if="typing.isTyping">
+                <em>{{ typing.username }} is typing a message...</em>
+              </p>
               <p v-for="(value, index) in messages" :key="index">
                 <strong>{{ value.username }} :</strong>
                 {{ value.message }}
@@ -55,8 +58,26 @@ export default {
       username: "",
       message: "",
       messages: [],
-      room: ""
+      room: "",
+      oldRoom: "",
+      typing: {
+        isTyping: false
+      }
     };
+  },
+  watch: {
+    message(value) {
+      value
+        ? this.socket.emit("typing", {
+            username: this.username,
+            room: this.room,
+            isTyping: true
+          })
+        : this.socket.emit("typing", {
+            room: this.room,
+            isTyping: false
+          });
+    }
   },
   created() {
     if (!this.$route.params.username) {
@@ -66,6 +87,9 @@ export default {
     // console.log(this.$route.params);
     this.socket.on("chatMessage", data => {
       this.messages.push(data);
+    });
+    this.socket.on("typingMessage", data => {
+      this.typing = data;
     });
   },
   methods: {
@@ -85,13 +109,28 @@ export default {
         room: this.room
       };
       this.socket.emit("roomMessage", setData);
+      this.message = "";
     },
     selectRoom(data) {
       console.log(data);
-      this.socket.emit("joinRoom", {
-        username: this.username,
-        room: data
-      });
+      if (this.oldRoom) {
+        console.log("sudah pernah masuk ke room " + this.oldRoom);
+        console.log("dan akan masuk ke room " + data);
+        this.socket.emit("changeRoom", {
+          username: this.username,
+          room: data,
+          oldRoom: this.oldRoom
+        });
+        this.oldRoom = data;
+      } else {
+        console.log("belum pernah masuk ke ruang manapun");
+        console.log("dan akan masuk ke room " + data);
+        this.socket.emit("joinRoom", {
+          username: this.username,
+          room: data
+        });
+        this.oldRoom = data;
+      }
     }
   }
 };
