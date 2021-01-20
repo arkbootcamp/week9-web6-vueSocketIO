@@ -31,13 +31,46 @@
               </p>
             </div>
           </div>
-          <input class="message" type="text" placeholder="Message" />
-          <button class="send">Send</button>
+          <input
+            class="message"
+            v-model="message"
+            type="text"
+            placeholder="Message"
+          />
+          <button class="send" @click="sendMessage">Send</button>
         </div>
       </b-col>
     </b-row>
   </b-container>
 </template>
+
+<script>
+export default {
+  name: "Chat",
+  data() {
+    return {
+      username: "",
+      message: ""
+    };
+  },
+  created() {
+    if (!this.$route.params.username) {
+      this.$router.push("/");
+    }
+    this.username = this.$route.params.username;
+    console.log(this.$route.params);
+  },
+  methods: {
+    sendMessage() {
+      const setData = {
+        username: this.username,
+        message: this.message
+      };
+      console.log(setData);
+    }
+  }
+};
+</script>
 
 <style scoped>
 .chat {
