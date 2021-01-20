@@ -1,7 +1,7 @@
 <template>
   <b-container class="bv-example-row">
     <b-form-group>
-      <b-form-select class="mb-3">
+      <b-form-select class="mb-3" v-model="room" @change="selectRoom">
         <b-form-select-option :value="null"
           >Please select Room</b-form-select-option
         >
@@ -25,9 +25,9 @@
         <div class="chat">
           <div class="chat-window">
             <div class="output">
-              <p>
-                <strong>Bagus :</strong>
-                Hai
+              <p v-for="(value, index) in messages" :key="index">
+                <strong>{{ value.username }} :</strong>
+                {{ value.message }}
               </p>
             </div>
           </div>
@@ -45,12 +45,17 @@
 </template>
 
 <script>
+import io from "socket.io-client";
+
 export default {
   name: "Chat",
   data() {
     return {
+      socket: io("http://localhost:3000"),
       username: "",
-      message: ""
+      message: "",
+      messages: [],
+      room: ""
     };
   },
   created() {
@@ -58,15 +63,35 @@ export default {
       this.$router.push("/");
     }
     this.username = this.$route.params.username;
-    console.log(this.$route.params);
+    // console.log(this.$route.params);
+    this.socket.on("chatMessage", data => {
+      this.messages.push(data);
+    });
   },
   methods: {
     sendMessage() {
+      // const setData = {
+      //   username: this.username,
+      //   message: this.message
+      // };
+      // console.log(setData);
+      // this.socket.emit("globalMessage", setData);
+      // this.socket.emit("privateMessage", setData);
+      // this.socket.emit("broadcastMessage", setData);
+      // ===================
       const setData = {
         username: this.username,
-        message: this.message
+        message: this.message,
+        room: this.room
       };
-      console.log(setData);
+      this.socket.emit("roomMessage", setData);
+    },
+    selectRoom(data) {
+      console.log(data);
+      this.socket.emit("joinRoom", {
+        username: this.username,
+        room: data
+      });
     }
   }
 };
