@@ -108,11 +108,15 @@ export default {
         message: this.message,
         room: this.room
       };
+      // [1] menjalankan socket io untuk mendapatkan realtimenya
       this.socket.emit("roomMessage", setData);
+      // [2] menjalankan proses axios post data ke table chat
+      // this.postMessage(setData)
       this.message = "";
     },
     selectRoom(data) {
       console.log(data);
+      // [1] join room socket io
       if (this.oldRoom) {
         console.log("sudah pernah masuk ke room " + this.oldRoom);
         console.log("dan akan masuk ke room " + data);
@@ -131,6 +135,7 @@ export default {
         });
         this.oldRoom = data;
       }
+      // [2] proses get data dari database dan akan menyimpan ke dalam variabel messages proses axios
     }
   }
 };
