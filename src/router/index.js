@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Login from "../views/Login.vue";
 import Maps from "../views/Maps.vue";
 import Chat from "../views/Chat.vue";
+import Barcode from "../views/Barcode.vue";
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/chat",
     name: "Chat",
     component: Chat
+  },
+  {
+    path: "/barcode",
+    name: "Barcode",
+    component: Barcode
   }
 ];
 

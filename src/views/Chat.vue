@@ -86,6 +86,7 @@ export default {
     this.username = this.$route.params.username;
     // console.log(this.$route.params);
     this.socket.on("chatMessage", data => {
+      console.log(data);
       this.messages.push(data);
     });
     this.socket.on("typingMessage", data => {

@@ -1,21 +1,25 @@
 <template>
   <div class="maps">
     <h1>Page Maps</h1>
-    <GmapMap
-      :center="coordinate"
-      :zoom="10"
-      map-type-id="terrain"
-      style="width: 500px; height: 300px"
-    >
-      <GmapMarker
-        :position="coordinate"
-        :clickable="true"
-        :draggable="true"
-        @click="clickMarker"
-        icon="https://img.icons8.com/color/48/000000/map-pin.png"
-      />
-    </GmapMap>
-    <h3>{{ coordinate }}</h3>
+    <div class="container">
+      <GmapMap
+        :center="coordinate"
+        :zoom="10"
+        map-type-id="terrain"
+        style="width: 500px; height: 300px; margin: auto;"
+      >
+        <GmapMarker
+          :position="coordinate"
+          :clickable="true"
+          :draggable="true"
+          @click="clickMarker"
+          icon="https://img.icons8.com/color/48/000000/map-pin.png"
+        />
+      </GmapMap>
+      <br />
+      <h3>{{ coordinate }}</h3>
+      <h4>accuracy : {{ accuracy }}</h4>
+    </div>
   </div>
 </template>
 
@@ -27,7 +31,8 @@ export default {
       coordinate: {
         lat: 10,
         lng: 10
-      }
+      },
+      accuracy: ""
     };
   },
   created() {
@@ -37,6 +42,7 @@ export default {
           lat: coordinates.lat,
           lng: coordinates.lng
         };
+        this.accuracy = coordinates.accuracy;
         console.log(coordinates);
       })
       .catch(error => {
