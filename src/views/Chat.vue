@@ -54,12 +54,15 @@ export default {
   name: "Chat",
   data() {
     return {
+      // TAMBAHKAN SYNTAX YANG ADA DI DALAM INI
+      // =========================================
       socket: io.connect("https://backend-web6.fwebdev.online", {
         path: "/api2/socket.io"
       }),
       // socket: io.connect("http://localhost:3001", {
       //   path: "/api2/socket.io"
       // }),
+      // =========================================
       username: "",
       message: "",
       messages: [],
